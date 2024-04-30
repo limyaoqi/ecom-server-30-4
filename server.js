@@ -15,6 +15,7 @@ mongoose
   });
 
 app.use("/", require("./routes/product"));
+app.use("/category", require("./routes/categories"));
 
 app.listen(PORT, () => {
   console.log(`App is running in this ${PORT} `);
