@@ -7,24 +7,35 @@ const addProduct = async (name, description, price, category) => {
     price,
     category,
   });
-  await newProduct.save();
+  await Product.save();
   return newProduct;
 };
 
-const getProduct = async (category) => {
+const getProduct = async (category, perPage = 4, page = 1) => {
   try {
     let filters = {};
     if (category) {
       filters.category = category;
     }
-    const product = await Product.find(filters);
+    const product = await Product.find(filters)
+      .populate("category")
+      .limit(perPage) // 4
+      .skip((page - 1) * perPage) //
+      .sort({ _id: -1 });
     return product;
   } catch (error) {
     throw new Error(error);
   }
 };
 
-const updateProduct = async (productId, name, description, price, category) => {
+const updateProduct = async (
+  productId,
+  name,
+  description,
+  price,
+  category,
+  image
+) => {
   try {
     const product = await Product.findById(productId);
     if (!product) throw new Error("product not found");
@@ -35,6 +46,7 @@ const updateProduct = async (productId, name, description, price, category) => {
         description,
         price,
         category,
+        image,
       },
       { new: true }
     );

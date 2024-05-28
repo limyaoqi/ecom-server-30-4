@@ -26,7 +26,9 @@ router.post("/products", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const category = req.query.category;
-    const products = await getProduct(category);
+    const perPage = req.query.perPage;
+    const page = req.query.page;
+    const products = await getProduct(category,perPage,page);
     return res.status(200).send(products);
   } catch (error) {
     console.log(error.message);
@@ -55,12 +57,14 @@ router.put("/products/:id", async (req, res) => {
     const description = req.body.description;
     const price = req.body.price;
     const category = req.body.category;
+    const image = req.body.image
     const newProduct = await updateProduct(
       productId,
       name,
       description,
       price,
-      category
+      category,
+      image
     );
     return res.status(200).send(newProduct);
   } catch (error) {
